@@ -4,15 +4,21 @@ GLOBAL_LIST_INIT(admin_verbs_default, world.AVerbsDefault())
 GLOBAL_PROTECT(admin_verbs_default)
 /world/proc/AVerbsDefault()
 	return list(
+	/client/proc/deadmin, /*destroys our own admin datum so we can play as a regular player*/
+	/client/proc/hide_verbs, /*hides all our adminverbs*/
+	)
+GLOBAL_LIST_INIT(admin_verbs_admin, world.AVerbsAdmin())
+GLOBAL_PROTECT(admin_verbs_admin)
+/world/proc/AVerbsAdmin()
+	return list(
+//Default admin actions
 	/client/proc/cmd_admin_pm_context, /*right-click adminPM interface*/
 	/client/proc/cmd_admin_pm_panel, /*admin-pm list*/
 	/client/proc/cmd_admin_say, /*admin-only ooc chat*/
-	/client/proc/deadmin, /*destroys our own admin datum so we can play as a regular player*/
 	/client/proc/debugstatpanel,
 	/client/proc/debug_variables, /*allows us to -see- the variables of any instance in the game. +VAREDIT needed to modify*/
 	/client/proc/dsay, /*talk in deadchat using our ckey/fakekey*/
 	/client/proc/fix_air, /*resets air in designated radius to its default atmos composition*/
-	/client/proc/hide_verbs, /*hides all our adminverbs*/
 	/client/proc/investigate_show, /*various admintools for investigation. Such as a singulo grief-log*/
 	/client/proc/mark_datum_mapview,
 	/client/proc/reestablish_db_connection, /*reattempt a connection to the database*/
@@ -26,11 +32,6 @@ GLOBAL_PROTECT(admin_verbs_default)
 	/client/proc/cmd_loud_admin_say,	/*admin-only chat except its annoying - SKYRAT EDIT ADDITION - ADMIN*/
 	/client/proc/remove_liquid,			/*SKYRAT EDIT ADDITION*/
 	/client/proc/revokebunkerbypass,	/*SKYRAT EDIT ADDITION - PANICBUNKER*/
-	)
-GLOBAL_LIST_INIT(admin_verbs_admin, world.AVerbsAdmin())
-GLOBAL_PROTECT(admin_verbs_admin)
-/world/proc/AVerbsAdmin()
-	return list(
 // Admin datums
 	/datum/admins/proc/access_news_network, /*allows access of newscasters*/
 	/datum/admins/proc/announce, /*priority announce something to all clients.*/
@@ -50,6 +51,7 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/datum/admins/proc/trophy_manager,
 	/datum/admins/proc/view_all_circuits,
 	/datum/verbs/menu/Admin/verb/playerpanel, /* It isn't /datum/admin but it fits no less */
+	/datum/admins/proc/change_shuttle_events, //allows us to change the shuttle events
 // Client procs
 	/client/proc/admin_call_shuttle, /*allows us to call the emergency shuttle*/
 	/client/proc/admin_cancel_shuttle, /*allows us to cancel the emergency shuttle, sending it back to centcom*/
@@ -96,6 +98,7 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/client/proc/toggle_combo_hud, /* toggle display of the combination pizza antag and taco sci/med/eng hud */
 	/client/proc/toggle_view_range, /*changes how far we can see*/
 	/client/proc/cmd_admin_law_panel,
+	/client/proc/player_ticket_history,
 	/datum/admins/proc/toggleaooc,		/*Toggle Antag OOC - SKYRAT EDIT ADDITION*/
 	/datum/admins/proc/toggledchat, 	/*SKYRAT EDIT ADDITION*/
 	/datum/admins/proc/togglesooc,		/*Toggle Security OOC - SKYRAT EDIT ADDITION*/
@@ -103,6 +106,7 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/client/proc/admin_open_event_spawners_menu,	/*EVENTS - SKYRAT EDIT ADDITION*/
 	/client/proc/request_help,						/*SKYRAT EDIT ADDITION*/
 	/client/proc/view_opfors,						/*OPFOR - SKYRAT EDIT ADDITION*/
+	/client/proc/lorecaster_story_manager,          /* SKYRAT EDIT ADDITION */
 	)
 GLOBAL_LIST_INIT(admin_verbs_ban, list(/client/proc/unban_panel, /client/proc/ban_panel, /client/proc/stickybanpanel))
 GLOBAL_PROTECT(admin_verbs_ban)
@@ -233,6 +237,7 @@ GLOBAL_PROTECT(admin_verbs_debug)
 	/client/proc/populate_world,
 	/client/proc/pump_random_event,
 	/client/proc/print_cards,
+	/client/proc/reestablish_tts_connection,
 	/client/proc/reload_cards,
 	/client/proc/reload_configuration,
 	/client/proc/restart_controller,
@@ -348,7 +353,7 @@ GLOBAL_PROTECT(admin_verbs_poll)
 /client/proc/admin_ghost()
 	set category = "Admin.Game"
 	set name = "Aghost"
-	if(!holder)
+	if(!check_rights(R_ADMIN))
 		return
 	. = TRUE
 	if(isobserver(mob))
@@ -380,7 +385,11 @@ GLOBAL_PROTECT(admin_verbs_poll)
 	set name = "Invisimin"
 	set category = "Admin.Game"
 	set desc = "Toggles ghost-like invisibility (Don't abuse this)"
-	if(holder && mob)
+
+	if(!check_rights(R_ADMIN))
+		return
+
+	if(mob)
 		if(initial(mob.invisibility) == INVISIBILITY_OBSERVER)
 			to_chat(mob, span_boldannounce("Invisimin toggle failed. You are already an invisible mob like a ghost."), confidential = TRUE)
 			return

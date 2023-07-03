@@ -13,7 +13,7 @@
 	desc = "A glass bowl that is capable of carrying things."
 	icon_state = "glass_globe"
 	material_flags = MATERIAL_COLOR
-	custom_materials = list(/datum/material/glass = 1000)
+	custom_materials = list(/datum/material/glass = HALF_SHEET_MATERIAL_AMOUNT)
 
 /datum/export/glassblowing
 	cost = CARGO_CRATE_VALUE * 5
@@ -39,6 +39,7 @@
 	desc = "A glass bowl that is capable of carrying things."
 	icon = 'modular_skyrat/modules/primitive_production/icons/prim_fun.dmi'
 	icon_state = "glass_bowl"
+	custom_materials = null
 	material_flags = MATERIAL_EFFECTS | MATERIAL_COLOR
 
 /obj/item/reagent_containers/cup/bowl/blowing_glass/Initialize(mapload)
@@ -50,6 +51,7 @@
 	desc = "A glass cup that is capable of carrying liquids."
 	icon = 'modular_skyrat/modules/primitive_production/icons/prim_fun.dmi'
 	icon_state = "glass_cup"
+	custom_materials = null
 	material_flags = MATERIAL_EFFECTS | MATERIAL_COLOR
 
 /obj/item/reagent_containers/cup/beaker/large/blowing_glass/Initialize(mapload)
@@ -61,6 +63,7 @@
 	desc = "A glass plate that is capable of carrying things."
 	icon = 'modular_skyrat/modules/primitive_production/icons/prim_fun.dmi'
 	icon_state = "glass_plate"
+	custom_materials = null
 	material_flags = MATERIAL_EFFECTS | MATERIAL_COLOR
 
 /obj/item/plate/blowing_glass/Initialize(mapload)

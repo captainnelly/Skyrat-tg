@@ -53,6 +53,7 @@
 	var/exp_requirements = 0
 	/// Experience required to play this job, if the config is enabled, and `exp_required_type_department` is not enabled with the proper config.
 	var/exp_required_type = ""
+	var/exp_required_half_head = FALSE //Workaround for jobs like warden that reqire half of the head time
 	/// Department experience required to play this job, if the config is enabled.
 	var/exp_required_type_department = ""
 	/// Experience type granted by playing in this job.
@@ -131,6 +132,9 @@
 
 	/// custom ringtone for this job
 	var/job_tone
+	
+	/// Minimal character age for this job
+	var/required_character_age
 
 
 /datum/job/New()
@@ -519,7 +523,8 @@
 		return
 	apply_pref_name(/datum/preference/name/ai, player_client) // This proc already checks if the player is appearance banned.
 	set_core_display_icon(null, player_client)
-
+	apply_pref_emote_display(player_client)
+	apply_pref_hologram_display(player_client)
 
 /mob/living/silicon/robot/apply_prefs_job(client/player_client, datum/job/job)
 	if(mmi)

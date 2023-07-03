@@ -157,7 +157,7 @@
  * * allow_numbers - allows numbers and common special characters - used for silicon/other weird things names
  * * cap_after_symbols - words like Bob's will be capitalized to Bob'S by default. False is good for titles.
  */
-/proc/reject_bad_name(t_in, allow_numbers = TRUE, max_length = MAX_NAME_LEN, ascii_only = TRUE, strict = FALSE, cap_after_symbols = TRUE) // SKYRAT EDIT CHANGE
+/proc/reject_bad_name(t_in, allow_numbers = TRUE, max_length = MAX_NAME_LEN, ascii_only = TRUE, strict = FALSE, cap_after_symbols = TRUE) // SKYRAT EDIT CHANGE - allow_numbers to TRUE
 	if(!t_in)
 		return //Rejects the input if it is null
 
@@ -330,7 +330,7 @@
 /**
  * Truncate a string to the given length
  *
- * Will only truncate if the string is larger than the length and *ignores unicode concerns*
+ * Will only truncate if the string is larger than the length
  *
  * This exists soley because trim does other stuff too.
  *
@@ -339,8 +339,8 @@
  * * max_length - integer length to truncate at
  */
 /proc/truncate(text, max_length)
-	if(length(text) > max_length)
-		return copytext(text, 1, max_length)
+	if(length_char(text) > max_length)
+		return copytext_char(text, 1, max_length)
 	return text
 
 //Returns a string with reserved characters and spaces before the first word and after the last word removed.
@@ -787,34 +787,34 @@ GLOBAL_LIST_INIT(binary, list("0","1"))
 	switch(macro)
 		//prefixes/agnostic
 		if("the")
-			rest = text("\the []", rest)
+			rest = "\the [rest]"
 		if("a")
-			rest = text("\a []", rest)
+			rest = "\a [rest]"
 		if("an")
-			rest = text("\an []", rest)
+			rest = "\an [rest]"
 		if("proper")
-			rest = text("\proper []", rest)
+			rest = "\proper [rest]"
 		if("improper")
-			rest = text("\improper []", rest)
+			rest = "\improper [rest]"
 		if("roman")
-			rest = text("\roman []", rest)
+			rest = "\roman [rest]"
 		//postfixes
 		if("th")
-			base = text("[]\th", rest)
+			base = "[rest]\th"
 		if("s")
-			base = text("[]\s", rest)
+			base = "[rest]\s"
 		if("he")
-			base = text("[]\he", rest)
+			base = "[rest]\he"
 		if("she")
-			base = text("[]\she", rest)
+			base = "[rest]\she"
 		if("his")
-			base = text("[]\his", rest)
+			base = "[rest]\his"
 		if("himself")
-			base = text("[]\himself", rest)
+			base = "[rest]\himself"
 		if("herself")
-			base = text("[]\herself", rest)
+			base = "[rest]\herself"
 		if("hers")
-			base = text("[]\hers", rest)
+			base = "[rest]\hers"
 		else // Someone fucked up, if you're not a macro just go home yeah?
 			// This does technically break parsing, but at least it's better then what it used to do
 			return base
